@@ -1,7 +1,7 @@
 # broker-cmdline-client
-Java-based command line client to access notification records from the OpenAIRE Broker public API.
+Java-based command line client to access notification records from the OpenAIRE Broker public API (<a href="https://api.openaire.eu/broker">Swagger documentation</a>). <a href="https://www.openaire.eu/content-enrichment-guide">Click here</a> for more information about the OpenAIRE Broker Service.
 
-Notification records are stored as newline-delimited JSON files, one per subscription.
+The client will store the requested notification records in your file system in json files. One file per subscription, each containing a json array (one item per notification record). The files can be optionally saved in compressed format (i.e. as `.json.gz`).
 
 The produced files can be used as input to the <a href="https://4science.github.io/oaire-eld/#/data-correction">Data correction service for DSpace7/DSpace-CRIS 7 developed by 4Science</a> in the context of the <a href="https://www.openaire.eu/open-innovation-in-openaire">OpenAIRE-Advance Open Innovation Call</a>.
 
