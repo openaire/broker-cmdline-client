@@ -3,6 +3,10 @@ Java-based command line client to access notification records from the OpenAIRE 
 
 Notification records are stored as newline-delimited JSON files, one per subscription.
 
+The produced files can be used as input to the <a href="https://4science.github.io/oaire-eld/#/data-correction">Data correction service for DSpace7/DSpace-CRIS 7 developed by 4Science</a> in the context of the <a href="https://www.openaire.eu/open-innovation-in-openaire">OpenAIRE-Advance Open Innovation Call</a>.
+
+Full documentation, github links and installation instructions of the Data correction service are available <a href="https://4science.github.io/oaire-eld">here</a>.
+
 ## Compilation requirements
 - git client
 - Java 1.8
