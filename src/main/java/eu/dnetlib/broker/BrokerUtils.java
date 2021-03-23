@@ -84,7 +84,9 @@ public class BrokerUtils {
 
 		String url = baseUrl + "/scroll/notifications/bySubscriptionId/" + URLEncoder.encode(subscrId, StandardCharsets.UTF_8.name());
 		boolean notCompleted = false;
+		boolean first = true;
 
+		file.append("[\n");
 		do {
 			log.info("Performing HTTP GET for notifications: " + url);
 			final HttpGet request = new HttpGet(url);
@@ -95,8 +97,12 @@ public class BrokerUtils {
 
 			final JSONArray values = data.getJSONArray("values");
 			for (int i = 0; i < values.length(); i++) {
+				if (first) {
+					first = false;
+				} else {
+					file.append(",\n");
+				}
 				file.append(values.getJSONObject(i).toString());
-				file.append("\n");
 			}
 
 			notCompleted = !data.getBoolean("completed");
@@ -105,6 +111,8 @@ public class BrokerUtils {
 			System.out.print(".");
 			System.out.flush();
 		} while (notCompleted);
+
+		file.append("\n]\n");
 	}
 
 	private String extractDsName(final JSONArray conds) {
