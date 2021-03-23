@@ -26,7 +26,7 @@ public class BrokerClientApp implements CommandLineRunner {
 
 	private static Logger log = LoggerFactory.getLogger(BrokerClientApp.class);
 
-	private static final String APPLICATION_NAME = "oa-broker-client";
+	private static final String APPLICATION_JAR = "./broker-cmdline-client.jar";
 	private static final String APPLICATION_TITLE = "OpenAIRE Broker - Public API Client";
 	private static final String APPLICATION_FOOTER = "\nSee http://api.openaire.eu/broker for further details.\n";
 
@@ -114,7 +114,7 @@ public class BrokerClientApp implements CommandLineRunner {
 	public void run(final String... args) throws Exception {
 		System.out.println();
 
-		log.info("**** EXECUTING - BrokerClientApp ***");
+		log.info(String.format("**** EXECUTING - %s ***", APPLICATION_TITLE));
 
 		final CommandLine cmd = cmdLineParser.parse(options, args, true);
 
@@ -180,7 +180,7 @@ public class BrokerClientApp implements CommandLineRunner {
 	private static void printHelpAndExit(final Options options) {
 		final String ln = StringUtils.repeat("=", APPLICATION_TITLE.length());
 		System.out.println(String.format("\n%s\n%s\n%s\n", ln, APPLICATION_TITLE, ln));
-		new HelpFormatter().printHelp(APPLICATION_NAME, options, true);
+		new HelpFormatter().printHelp(APPLICATION_JAR, options, true);
 		System.out.println(APPLICATION_FOOTER);
 
 		System.exit(1);

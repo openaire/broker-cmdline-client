@@ -44,8 +44,8 @@ java -jar ./broker-cmdline-client-2.3.4.RELEASE.jar
 OpenAIRE Broker - Public API Client
 ===================================
 
-usage: oa-broker-client [-bu <arg>] [-h] [-i] -o <arg> -u <arg> [-v] [-vv]
-[-z]
+usage: ./broker-cmdline-client.jar [-bu <arg>] [-h] [-i] -o <arg> -u <arg> [-v] [-vv]
+        [-z]
 -bu,--baseurl <arg>   override of the default Broker Public Api baseUrl
 -h,--help             help
 -i                    interactive mode
