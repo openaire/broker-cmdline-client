@@ -11,7 +11,7 @@ Notification records are stored as newline-delimited JSON files, one per subscri
 ## Compilation instructions
 
 ```
-git clone https://github.com/openaire/broker-cmdline-client.git                                                                                                                                                                                                                                    10:29:06
+git clone https://github.com/openaire/broker-cmdline-client.git                                                                                                   
 Cloning into 'broker-cmdline-client'...
 remote: Enumerating objects: 5, done.
 remote: Counting objects: 100% (5/5), done.
