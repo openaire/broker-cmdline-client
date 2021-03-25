@@ -62,6 +62,10 @@ usage: ./broker-cmdline-client.jar [-bu <arg>] [-h] [-i] -o <arg> -u <arg> [-v] 
 See http://api.openaire.eu/broker for further details.
 ```
 
+**Important**: the email of the subscriber must correspond to the email associated to the OpenAIRE account used to create the subscriptions on [provide.openaire.eu](https://provide.openaire.eu)
+
+
+
 ## Example usage
 
 ```
