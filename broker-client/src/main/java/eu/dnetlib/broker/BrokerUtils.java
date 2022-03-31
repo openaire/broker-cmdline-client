@@ -3,6 +3,7 @@ package eu.dnetlib.broker;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URL;
@@ -22,9 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
-import org.springframework.stereotype.Component;
 
-@Component
 public class BrokerUtils {
 
 	private static final Logger log = LoggerFactory.getLogger(BrokerUtils.class);
@@ -33,17 +32,17 @@ public class BrokerUtils {
 
 	public List<String> listSubscriptions(final URL baseUrl, final String email) throws Exception {
 		final String url = baseUrl + "/subscriptions?email=" + URLEncoder.encode(email, StandardCharsets.UTF_8.name());
-		log.info("Performing HTTP GET for subscriptions: " + url);
+        log.debug("Performing HTTP GET for subscriptions: " + url);
 
 		final HttpGet request = new HttpGet(url);
 		request.addHeader("accept", "application/json");
 		final HttpResponse response = client.execute(request);
 		final String json = IOUtils.toString(response.getEntity().getContent());
-		log.info("Found subscriptions: " + json);
+        log.debug("Found subscriptions: " + json);
 
 		final JSONArray array = new JSONArray(json);
 
-		System.out.println(String.format("Found %d subscription(s):", array.length()));
+        log.info(String.format("Found %d subscription(s)", array.length()));
 
 		final List<String> res = new ArrayList<>();
 		for (int i = 0; i < array.length(); i++) {
@@ -53,11 +52,10 @@ public class BrokerUtils {
 			final String topic = object.getString("topic");
 			final String ds = extractDsName(object.getJSONArray("conditionsAsList"));
 
-			System.out.println(String.format(" - %s (TOPIC: %s, Datasource: %s)", suscrId, topic, ds));
+            log.info(String.format(" - %s (TOPIC: %s, Datasource: %s)", suscrId, topic, ds));
 
 			res.add(suscrId);
 		}
-		System.out.println();
 
 		return res;
 	}
@@ -65,8 +63,7 @@ public class BrokerUtils {
 	public void downloadEvents(final URL baseUrl, final String subscrId, final File outputDir, final boolean gzip) throws Exception {
 		final String fp = String.format(gzip ? "%s/%s.json.gz" : "%s/%s.json", outputDir.getAbsolutePath(), subscrId);
 
-		System.out.print("Saving file " + fp + ": ");
-		System.out.flush();
+        log.info("Saving file " + fp + ": ");
 
 		if (gzip) {
 			try (final FileOutputStream fos = new FileOutputStream(fp); final Writer w = new OutputStreamWriter(new GZIPOutputStream(fos), "UTF-8")) {
@@ -77,7 +74,13 @@ public class BrokerUtils {
 				writeEvents(baseUrl, subscrId, fw);
 			}
 		}
-		System.out.println();
+
+	}
+
+	public void downloadEvents(final URL baseUrl, final String subscrId, final OutputStream outputStream) throws Exception {
+	    try( Writer writer = new OutputStreamWriter(outputStream) ){
+	        writeEvents(baseUrl, subscrId, writer);
+	    }
 	}
 
 	private void writeEvents(final URL baseUrl, final String subscrId, final Writer file) throws Exception {
@@ -88,7 +91,7 @@ public class BrokerUtils {
 
 		file.append("[\n");
 		do {
-			log.info("Performing HTTP GET for notifications: " + url);
+            log.debug("Performing HTTP GET for notifications: " + url);
 			final HttpGet request = new HttpGet(url);
 			request.addHeader("accept", "application/json");
 			final HttpResponse response = client.execute(request);
@@ -108,8 +111,6 @@ public class BrokerUtils {
 			notCompleted = !data.getBoolean("completed");
 			url = baseUrl + "/scroll/notifications/" + data.getString("id");
 
-			System.out.print(".");
-			System.out.flush();
 		} while (notCompleted);
 
 		file.append("\n]\n");
