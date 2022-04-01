@@ -24,9 +24,9 @@ import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 
-public class BrokerUtils {
+public class BrokerClient {
 
-	private static final Logger log = LoggerFactory.getLogger(BrokerUtils.class);
+	private static final Logger log = LoggerFactory.getLogger(BrokerClient.class);
 
 	private static final HttpClient client = HttpClientBuilder.create().build();
 
