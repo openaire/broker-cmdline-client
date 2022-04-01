@@ -14,8 +14,8 @@ import org.springframework.context.annotation.Configuration;
 public class BrokerClientConfiguration {
 
     @Bean
-    public BrokerUtils brokerUtils() {
-        return new BrokerUtils();
+    public BrokerClient brokerClient() {
+        return new BrokerClient();
     }
 
 }
