@@ -9,16 +9,15 @@
 		<version>2.6.6</version>
 		<relativePath />
 	</parent>
-
-	<modelVersion>4.0.0</modelVersion>
 	
-	<groupId>eu.openaire</groupId>
-	<artifactId>broker-cmdline-client</artifactId>
-	<version>1.0.0</version>
-	<packaging>pom</packaging>
+	<modelVersion>4.0.0</modelVersion>
 
-	<name>broker-cmdline-client</name>
-	<description>OpenAIRE Broker Service - Command Line Client</description>
+	<groupId>eu.openaire</groupId>
+	<artifactId>broker-client</artifactId>
+	<version>1.0.0</version>
+
+	<name>broker-client</name>
+	<description>OpenAIRE Broker Service - Client</description>
 
 	<licenses>
         <license>
@@ -29,35 +28,40 @@
         </license>
     </licenses>
 
-	<issueManagement>
-		<system>GitHub</system>
-		<url>https://github.com/openaire/broker-cmdline-client/issues</url>
-	</issueManagement>
-
-	<ciManagement>
-		<system>jenkins</system>
-		<url>https://jenkins-dnet.d4science.org/</url>
-	</ciManagement>
-
-	<scm>
-		<connection>scm:git:git@github.com:openaire/broker-cmdline-client.git</connection>
-		<developerConnection>scm:git:git@github.com:openaire/broker-cmdline-client.git</developerConnection>
-		<url>https://github.com/openaire/broker-cmdline-client</url>
-		<tag>HEAD</tag>
-	</scm>
-
-	
-	<modules>
-		<module>broker-cmdline</module>
-		<module>broker-client</module>
-	</modules>
-
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.plugin.version>3.6.0</maven.compiler.plugin.version>
 		<java.version>1.8</java.version>
 	</properties>
+	
+	<dependencies>
+		<dependency>
+		    <groupId>org.slf4j</groupId>
+		    <artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+		</dependency>
+	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>2.4</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 </project>

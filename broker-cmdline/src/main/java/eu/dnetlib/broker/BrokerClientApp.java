@@ -34,7 +34,7 @@ public class BrokerClientApp implements CommandLineRunner {
 	private String defaultBrokerApiBaseUrl;
 
 	@Autowired
-	private BrokerUtils brokerUtils;
+    private BrokerClient brokerClient;
 
 	private final static CommandLineParser cmdLineParser = new DefaultParser();
 
@@ -130,9 +130,9 @@ public class BrokerClientApp implements CommandLineRunner {
 		log.info("* PARAMS: SAVE AS GZIP: " + gzip);
 		log.info("* PARAMS: INTERACTIVE MODE: " + interactive);
 
-		for (final String s : brokerUtils.listSubscriptions(baseUrl, user)) {
+        for (final String s : brokerClient.listSubscriptions(baseUrl, user)) {
 			if (!interactive || confirm(s)) {
-				brokerUtils.downloadEvents(baseUrl, s, outputDir, gzip);
+                brokerClient.downloadEvents(baseUrl, s, outputDir, gzip);
 			} else {
 				System.out.println("-- SKIPPED --");
 			}
