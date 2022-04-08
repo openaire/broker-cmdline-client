@@ -20,9 +20,10 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.configurationprocessor.json.JSONArray;
-import org.springframework.boot.configurationprocessor.json.JSONException;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class BrokerClient {
 
@@ -32,27 +33,27 @@ public class BrokerClient {
 
 	public List<String> listSubscriptions(final URL baseUrl, final String email) throws Exception {
 		final String url = baseUrl + "/subscriptions?email=" + URLEncoder.encode(email, StandardCharsets.UTF_8.name());
-        log.debug("Performing HTTP GET for subscriptions: " + url);
+		log.debug("Performing HTTP GET for subscriptions: " + url);
 
 		final HttpGet request = new HttpGet(url);
 		request.addHeader("accept", "application/json");
 		final HttpResponse response = client.execute(request);
 		final String json = IOUtils.toString(response.getEntity().getContent());
-        log.debug("Found subscriptions: " + json);
+		log.debug("Found subscriptions: " + json);
 
-		final JSONArray array = new JSONArray(json);
+		final JsonArray array = JsonParser.parseString(json).getAsJsonArray();
 
-        log.info(String.format("Found %d subscription(s)", array.length()));
+		log.info(String.format("Found %d subscription(s)", array.size()));
 
 		final List<String> res = new ArrayList<>();
-		for (int i = 0; i < array.length(); i++) {
-			final JSONObject object = array.getJSONObject(i);
+		for (int i = 0; i < array.size(); i++) {
+			final JsonObject object = array.get(i).getAsJsonObject();
 
-			final String suscrId = object.getString("subscriptionId");
-			final String topic = object.getString("topic");
-			final String ds = extractDsName(object.getJSONArray("conditionsAsList"));
+			final String suscrId = object.get("subscriptionId").getAsString();
+			final String topic = object.get("topic").getAsString();
+			final String ds = extractDsName(object.get("conditionsAsList").getAsJsonArray());
 
-            log.info(String.format(" - %s (TOPIC: %s, Datasource: %s)", suscrId, topic, ds));
+			log.info(String.format(" - %s (TOPIC: %s, Datasource: %s)", suscrId, topic, ds));
 
 			res.add(suscrId);
 		}
@@ -63,7 +64,7 @@ public class BrokerClient {
 	public void downloadEvents(final URL baseUrl, final String subscrId, final File outputDir, final boolean gzip) throws Exception {
 		final String fp = String.format(gzip ? "%s/%s.json.gz" : "%s/%s.json", outputDir.getAbsolutePath(), subscrId);
 
-        log.info("Saving file " + fp + ": ");
+		log.info("Saving file " + fp + ": ");
 
 		if (gzip) {
 			try (final FileOutputStream fos = new FileOutputStream(fp); final Writer w = new OutputStreamWriter(new GZIPOutputStream(fos), "UTF-8")) {
@@ -78,9 +79,9 @@ public class BrokerClient {
 	}
 
 	public void downloadEvents(final URL baseUrl, final String subscrId, final OutputStream outputStream) throws Exception {
-	    try( Writer writer = new OutputStreamWriter(outputStream) ){
-	        writeEvents(baseUrl, subscrId, writer);
-	    }
+		try (Writer writer = new OutputStreamWriter(outputStream)) {
+			writeEvents(baseUrl, subscrId, writer);
+		}
 	}
 
 	private void writeEvents(final URL baseUrl, final String subscrId, final Writer file) throws Exception {
@@ -91,38 +92,40 @@ public class BrokerClient {
 
 		file.append("[\n");
 		do {
-            log.debug("Performing HTTP GET for notifications: " + url);
+			log.debug("Performing HTTP GET for notifications: " + url);
 			final HttpGet request = new HttpGet(url);
 			request.addHeader("accept", "application/json");
 			final HttpResponse response = client.execute(request);
 			final String json = IOUtils.toString(response.getEntity().getContent());
-			final JSONObject data = new JSONObject(json);
+			final JsonObject data = JsonParser.parseString(json).getAsJsonObject();
 
-			final JSONArray values = data.getJSONArray("values");
-			for (int i = 0; i < values.length(); i++) {
+			final JsonArray values = data.get("values").getAsJsonArray();
+			for (int i = 0; i < values.size(); i++) {
 				if (first) {
 					first = false;
 				} else {
 					file.append(",\n");
 				}
-				file.append(values.getJSONObject(i).toString());
+				file.append(values.get(i).getAsJsonObject().toString());
 			}
 
-			notCompleted = !data.getBoolean("completed");
-			url = baseUrl + "/scroll/notifications/" + data.getString("id");
+			notCompleted = !data.get("completed").getAsBoolean();
+			url = baseUrl + "/scroll/notifications/" + data.get("id").getAsString();
 
 		} while (notCompleted);
 
 		file.append("\n]\n");
 	}
 
-	private String extractDsName(final JSONArray conds) {
+	private String extractDsName(final JsonArray conds) {
 		try {
-			for (int i = 0; i < conds.length(); i++) {
-				final JSONObject object = conds.getJSONObject(i);
-				if (object.getString("field").equals("targetDatasourceName")) { return object.getJSONArray("listParams").getJSONObject(0).getString("value"); }
+			for (int i = 0; i < conds.size(); i++) {
+				final JsonObject object = conds.get(i).getAsJsonObject();
+				if (object.get("field").getAsString().equals("targetDatasourceName")) {
+					return object.get("listParams").getAsJsonArray().get(0).getAsJsonObject().get("value").getAsString();
+				}
 			}
-		} catch (final JSONException e) {
+		} catch (final Throwable e) {
 			log.warn(e.getMessage());
 		}
 
