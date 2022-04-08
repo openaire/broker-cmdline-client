@@ -14,7 +14,7 @@
 
 	<groupId>eu.openaire</groupId>
 	<artifactId>broker-client</artifactId>
-	<version>1.0.0</version>
+	<version>1.1.1</version>
 
 	<name>broker-client</name>
 	<description>OpenAIRE Broker Service - Client</description>

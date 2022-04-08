@@ -14,7 +14,7 @@
 	
 	<groupId>eu.openaire</groupId>
 	<artifactId>broker-cmdline</artifactId>
-	<version>1.0.0</version>
+	<version>1.1.1</version>
 
 	<name>broker-cmdline</name>
 	<description>OpenAIRE Broker Service - Command Line</description>
@@ -49,7 +49,7 @@
 		<dependency>
 			<groupId>eu.openaire</groupId>
 			<artifactId>broker-client</artifactId>
-			<version>1.0.0</version>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 
