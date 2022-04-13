@@ -27,17 +27,20 @@ cd broker-cmdline-client/
 mvn package
 ```
 
-The compiled binary will be available under the `target` project subdirectory.
+The compiled binaries will be available under the `target` subdirectory of each module. In particular the executable JAR will be available under:
+```
+./broker-cmdline/target
+```
 
 In UNIX-like systems the client binary can be executed with
 
 ```
-./broker-cmdline-client-2.3.4.RELEASE.jar 
+./broker-cmdline-client-[VERSION].jar 
 ```
 
 In Windows systems the client binary can be executed with
 ```
-java -jar ./broker-cmdline-client-2.3.4.RELEASE.jar 
+java -jar ./broker-cmdline-client-[VERSION].jar 
 ```
 
 
@@ -69,7 +72,7 @@ See http://api.openaire.eu/broker for further details.
 ## Example usage
 
 ```
-./broker-cmdline-client-2.3.4.RELEASE.jar -u useremail@domain.eu -i -z  -o /tmp/broker 
+./broker-cmdline-client-[VERSION].jar -u useremail@domain.eu -i -z  -o /tmp/broker 
 ```
 
 The command above performs the following actions
