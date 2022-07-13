@@ -110,7 +110,9 @@ public class BrokerClient {
 			}
 
 			notCompleted = !data.get("completed").getAsBoolean();
-			url = baseUrl + "/scroll/notifications/" + data.get("id").getAsString();
+			if(notCompleted) {
+			    url = baseUrl + "/scroll/notifications/" + data.get("id").getAsString();
+			}
 
 		} while (notCompleted);
 
